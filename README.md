@@ -68,4 +68,4 @@ Feel free to open an issue or send feedback — let's make Space Word Quest even
 
 ---
 
-**Made with ☕ + 👽 + 💻 by [Your Name]**
+**Made with ☕ + 👽 + 💻 by Nazlı Temiz**
