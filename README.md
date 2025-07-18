@@ -35,14 +35,7 @@
    - `script.js`
 3. Open `index.html` in your browser to start playing.
 
-## 🎯 Future Ideas (Coming Soon?)
 
-- Time Attack Mode
-- Jumbled Letter Mode
-- Daily Quests
-- Expanded Word Collections (via JSON/API)
-- Unlockable Themes & Avatars
-- Sound-based challenges
 
 ## 💡 Technologies Used
 
