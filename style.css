@@ -178,10 +178,7 @@ body {
 #difficulty-screen,
 #instructions-screen,
 #game-screen,
-#game-over-screen,
-#alien-alert,
-#achievement-popup,
-#combo-popup {
+#game-over-screen {
   display: none;
 }
 
