@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Word Quest</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="starfield"></canvas>
+    <audio id="correctSound" preload="auto">
+      <source
+        src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmYeBGGS0fDTgjUGHm+69OWTRAx"
+        type="audio/wav"
+      />
+    </audio>
+    <audio id="wrongSound" preload="auto">
+      <source
+        src="data:audio/wav;base64,UklGRnoGAABXQVZFZm1"
+        type="audio/wav"
+      />
+    </audio>
+
+    <div class="container">
+      <!-- Intro Screen -->
+      <div id="intro-screen">
+        <h1>🚀Space Word Quest</h1>
+        <p class="subtitle">
+          Master the cosmic vocabulary across multiple difficulty levels
+        </p>
+        <div class="game-stats">
+          <div class="stat-item">
+            <span class="stat-label">Best Score:</span>
+            <span id="best-score">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Games Played:</span>
+            <span id="games-played">0</span>
+          </div>
+        </div>
+        <button class="start-btn" onclick="showDifficultySelection()">
+          🎮 Start Game
+        </button>
+      </div>
+
+      <div id="difficulty-screen">
+        <h2>🌟 Choose Your Mission Difficulty</h2>
+        <div class="difficulty-options">
+          <div class="difficulty-card" onclick="selectDifficulty('easy')">
+            <div class="difficulty-icon">🌍</div>
+            <h3>NOVICE EXPLORER</h3>
+            <p>
+              Short words (3-5 letters)<br />1 missing letter<br />Easy
+              vocabulary
+            </p>
+            <div class="difficulty-badge easy">EASY</div>
+          </div>
+          <div class="difficulty-card" onclick="selectDifficulty('medium')">
+            <div class="difficulty-icon">🪐</div>
+            <h3>SPACE CADET</h3>
+            <p>
+              Medium words (4-7 letters)<br />1-2 missing letters<br />Standard
+              vocabulary
+            </p>
+            <div class="difficulty-badge medium">MEDIUM</div>
+          </div>
+          <div class="difficulty-card" onclick="selectDifficulty('hard')">
+            <div class="difficulty-icon">🌌</div>
+            <h3>COSMIC MASTER</h3>
+            <p>
+              Long words (6-10 letters)<br />2-3 missing letters<br />Advanced
+              vocabulary
+            </p>
+            <div class="difficulty-badge hard">HARD</div>
+          </div>
+        </div>
+        <button class="back-btn" onclick="goToIntro()">← Back</button>
+      </div>
+
+      <div id="instructions-screen">
+        <h2>📚 Mission Briefing</h2>
+        <div class="instructions-content">
+          <div class="instruction-item">
+            <span class="step-number">1</span>
+            <p>
+              You'll see space words with missing letters in highlighted boxes
+            </p>
+          </div>
+          <div class="instruction-item">
+            <span class="step-number">2</span>
+            <p>Type the missing letters in order (left to right)</p>
+          </div>
+          <div class="instruction-item">
+            <span class="step-number">3</span>
+            <p>Use hints if you're stuck (but they cost points!)</p>
+          </div>
+          <div class="instruction-item">
+            <span class="step-number">4</span>
+            <p>Chain correct answers for bonus multipliers!</p>
+          </div>
+        </div>
+        <div class="example-section">
+          <h3>Example:</h3>
+          <div class="example-boxes">
+            <div class="example-box">G</div>
+            <div class="example-box missing">?</div>
+            <div class="example-box">L</div>
+            <div class="example-box missing">?</div>
+            <div class="example-box">X</div>
+            <div class="example-box">Y</div>
+          </div>
+          <p class="example-text">Missing letters: <strong>A, A</strong></p>
+        </div>
+        <button class="start-btn" onclick="startGame()">
+          🚀 Begin Mission
+        </button>
+        <button class="back-btn" onclick="showDifficultySelection()">
+          ← Back
+        </button>
+      </div>
+
+      <div id="game-screen">
+        <div class="game-header">
+          <div class="score-section">
+            <div class="score" id="score">Score: 0</div>
+            <div class="multiplier" id="multiplier">×1</div>
+            <div class="streak" id="streak">Streak: 0</div>
+          </div>
+          <div class="progress-section">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="word-counter" id="word-counter">Word 1 of 25</div>
+          </div>
+          <div class="timer-section">
+            <div class="timer" id="timer">⏱️ 30s</div>
+            <div class="lives" id="lives">❤️❤️❤️</div>
+          </div>
+        </div>
+
+        <div class="word-display" id="word-display"></div>
+
+        <div class="input-section">
+          <div class="guess-inputs" id="guess-inputs"></div>
+          <div class="action-buttons">
+            <button class="submit-btn" onclick="checkGuess()">SUBMIT</button>
+            <button class="hint-btn" onclick="useHint()" id="hint-btn">
+              💡 HINT (-10 pts)
+            </button>
+            <button class="pass-btn" onclick="passWord()">SKIP</button>
+          </div>
+        </div>
+
+        <div class="game-info">
+          <div class="word-definition" id="word-definition"></div>
+          <div class="result" id="result"></div>
+        </div>
+
+        <div class="quit-section">
+          <button class="quit-btn" onclick="quitGame()">QUIT MISSION</button>
+        </div>
+      </div>
+
+      <div id="game-over-screen">
+        <div class="game-over-title" id="game-over-title">
+          MISSION COMPLETE!
+        </div>
+        <div class="final-stats">
+          <div class="final-score">
+            <h3>Final Score</h3>
+            <div class="score-value">0</div>
+          </div>
+          <div class="accuracy">
+            <h3>Accuracy</h3>
+            <div class="accuracy-value">0%</div>
+          </div>
+          <div class="max-streak">
+            <h3>Best Streak</h3>
+            <div class="streak-value">0</div>
+          </div>
+        </div>
+
+        <div class="achievement-section" id="achievements"></div>
+        <div class="game-over-message" id="game-over-message">
+          🌟 Outstanding work, Space Explorer! 🌟<br />
+          You've proven your cosmic vocabulary mastery!
+        </div>
+        <div class="action-buttons">
+          <button class="restart-btn" onclick="restartGame()">
+            🚀 PLAY AGAIN
+          </button>
+          <button class="difficulty-btn" onclick="showDifficultySelection()">
+            🎯 CHANGE DIFFICULTY
+          </button>
+          <button class="quit-btn" onclick="goToIntro()">🏠 MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="alien-alert" id="alien-alert">
+      <span class="alien-emoji">👽</span>
+      <div id="alert-message">WRONG GUESS!</div>
+      <div>Try Again, Earthling!</div>
+    </div>
+
+    <div class="achievement-popup" id="achievement-popup">
+      <div class="achievement-icon">🏆</div>
+      <div class="achievement-text" id="achievement-text"></div>
+    </div>
+
+    <div class="combo-popup" id="combo-popup">
+      <div class="combo-text" id="combo-text">COMBO x2!</div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
