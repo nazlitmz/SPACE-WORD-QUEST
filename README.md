@@ -40,7 +40,7 @@
 ## 💡 Technologies Used
 
 - HTML5 + CSS3
-- Vanilla JavaScript
+- JavaScript
 - Web Audio API
 - DOM Manipulation
 - Local Storage (optional)
